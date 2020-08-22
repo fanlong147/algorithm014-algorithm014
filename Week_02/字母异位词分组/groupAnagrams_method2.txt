@@ -1,0 +1,26 @@
+class Solution {
+public:
+    //哈希表记录已记录字符串vector下标，一次排序,O（NKlog(K))
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> res;
+        unordered_map<string, int> unm;
+
+        int index = 0;
+        for(auto & s : strs)
+        {
+            auto t = s;
+            sort(t.begin(), t.end());
+            
+            if(unm.find(t) != unm.end())
+            {
+                res[unm[t]].push_back(s);
+            }
+            else
+            {
+                res.push_back({s});
+                unm[t] = index++;
+            }
+        }
+        return res;
+    }
+};

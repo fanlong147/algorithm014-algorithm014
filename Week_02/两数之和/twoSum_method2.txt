@@ -1,0 +1,26 @@
+class Solution {
+public:
+    //两遍循环，O(n)
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> res;
+        unordered_map<int, int> unm;
+
+        //哈希表记录每个数字的下标
+        for(int i = 0; i != nums.size(); ++i)
+        {
+            unm[nums[i]] = i;
+        }
+
+        for(int i = 0; i != nums.size(); ++i)
+        {
+            int dif = target - nums[i];
+            if(unm.find(dif) != unm.end() && unm[dif] != i)
+            {
+                res.push_back(i);
+                res.push_back(unm[dif]);
+                return res;
+            }
+        }
+        return res;
+    }
+};

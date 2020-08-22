@@ -1,0 +1,20 @@
+class Solution {
+public:
+    //哈希表计数，O（n）
+    bool isAnagram(string s, string t) {
+        if(s.size() != t.size()) return false;
+        //无序map
+        unordered_map<char, int> unm;
+        //
+        for(int i = 0; i != s.size(); ++i)
+        {
+            ++unm[s[i]];    //遇到s自增
+            --unm[t[i]];    //遇到t自减
+        }
+        for(auto & i : unm)
+        {
+            if(i.second != 0) return false;
+        }
+        return true;
+    }
+};
