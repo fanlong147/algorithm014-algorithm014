@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    //额外增加哈希函数，降低查询中序数组的时间复杂度
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        unordered_map<int, int> unm;
+        for(int i = 0; i != inorder.size(); ++i)
+            unm[inorder[i]] = i;
+
+        return innerBuildTree(preorder, 0 , preorder.size(), inorder, 0, inorder.size(), unm);
+    }
+
+    //map必须用引用或指针，否则会超时
+    TreeNode* innerBuildTree(vector<int>& preorder, int p_begin, int p_end, vector<int> & inorder,  int i_begin, int i_end, unordered_map<int, int>& unm)
+    {
+        if(p_begin == p_end) return nullptr;
+
+        int i_root_val = preorder[p_begin];   //找中序根节点
+        
+        TreeNode * node = new TreeNode(i_root_val);     //构造当前层节点
+
+        //根据中序结果界定左右子树
+        int i = unm[i_root_val];
+
+        int i_left_num = i - i_begin;
+        int i_right_num = i_end - i;
+
+        node->left = innerBuildTree(preorder, p_begin + 1, p_begin + i_left_num + 1, inorder, i_begin, i, unm);
+        node->right = innerBuildTree(preorder, p_begin + i_left_num + 1, p_end, inorder, i + 1, i_end, unm);
+        return node;
+    }
+};

@@ -1,0 +1,27 @@
+class Solution {
+public:
+//参考题解，递归过程做了判断，减少无效遍历次数
+    vector<vector<int>> combine(int n, int k) {
+        if(k <= 0 || n <= 0 || n < k) return res;
+        vector<int> com;
+        generate(n, k, 1, com);
+        return res;
+    }
+
+    void generate(int n, int k, int begin, vector<int> &com)
+    {
+       if(com.size() == k)
+       {
+           res.push_back(com);
+           return;
+       }
+       for(int i = begin; i <= n; ++i)
+       {
+           com.push_back(i);
+           generate(n, k, i+1, com);
+           com.pop_back();
+       }
+       
+    }
+    vector<vector<int>> res;
+};

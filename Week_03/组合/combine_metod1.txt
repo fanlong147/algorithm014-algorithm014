@@ -1,0 +1,28 @@
+class Solution {
+public:
+    //模拟括号生成，自己编写递归，遍历所有可能性
+    vector<vector<int>> combine(int n, int k) {
+        if(k <= 0 || n <= 0) return res;
+        vector<int> com;
+        generate(0, k, n, com);
+        return res;
+    }
+
+    void generate(int level, int k, int max, vector<int>& com)
+    {
+       if(k>0 && level < max)
+       {
+           generate(level + 1, k, max, com);    //当前层不添加
+
+            //当前层添加
+           com.push_back(level+1);
+           if(k-1 == 0)
+               res.push_back(com);
+           else
+               generate(level + 1, k -1, max, com);
+           
+           com.pop_back();
+       }
+    }
+    vector<vector<int>> res;
+};

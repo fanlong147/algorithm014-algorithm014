@@ -1,0 +1,103 @@
+#include <iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+    //不用哈希，时间复杂度高
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        return innerBuildTree(preorder, 0 , preorder.size(), inorder, 0, inorder.size());
+    }
+
+    TreeNode* innerBuildTree(vector<int>& preorder, int p_begin, int p_end, vector<int> & inorder,  int i_begin, int i_end)
+    {
+        if(p_begin == p_end) return nullptr;
+
+        int i_root_val = preorder[p_begin];   //找中序根节点
+        
+        TreeNode * node = new TreeNode(i_root_val);     //构造当前层节点
+
+        //根据中序结果界定左右子树
+        int i = i_begin;
+        for(; i != i_end; ++i)
+        {
+            if(inorder[i] == i_root_val)    break;
+        }
+
+        int i_left_num = i - i_begin;
+        int i_right_num = i_end - i;
+
+        node->left = innerBuildTree(preorder, p_begin + 1, p_begin + i_left_num + 1, inorder, i_begin, i);
+        node->right = innerBuildTree(preorder, p_begin + i_left_num + 1, p_end, inorder, i + 1, i_end);
+        return node;
+    }
+};
+
+//前序遍历，用于验证
+class PreOrder{
+public:
+    vector<int> preorderTraversal(TreeNode * root)
+    {   
+        if(root)
+        {
+            res.push_back(root->val);
+            if(root->left) preorderTraversal(root->left);
+            if(root->right) preorderTraversal(root->right);
+        }
+        return res;
+    }
+
+    vector<int> res;
+};
+
+//中序遍历，用于验证
+class Inorder{
+public:
+    vector<int> inorderTraversal(TreeNode * root)
+    {
+        if(root)
+        {
+            if(root->left) inorderTraversal(root->left);
+            res.push_back(root->val);
+            if(root->right) inorderTraversal(root->right);
+        }
+        return res;
+    }
+    vector<int> res;
+};
+
+//验证
+int main(int argc, char * argv[])
+{
+    Solution s;
+    vector<int> preorder{3,9,20,15,7}, inorder{9,3,15,20,7};
+    TreeNode * res = s.buildTree(preorder, inorder);
+
+    auto printFunc = [](int i) { cout << i << " ";} ;
+
+    //前序遍历验证
+    cout << "前序遍历" << endl;
+    PreOrder p;
+    auto preoder_res = p.preorderTraversal(res);
+    for_each(preoder_res.begin(), preoder_res.end(), printFunc);
+
+    cout << endl;
+    cout << "==============我是分割线=============="<< endl;
+    //中序遍历验证
+    cout << "中序遍历" << endl;
+    Inorder inOrder;
+    auto inorder_res = inOrder.inorderTraversal(res);
+    for_each(inorder_res.begin(), inorder_res.end(), printFunc);
+    return 0;
+
+}
