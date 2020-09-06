@@ -1,0 +1,28 @@
+class Solution {
+public:
+    //±©Á¦µÝ¹é
+    int maxProfit(vector<int>& prices) {
+        return caculate(prices, 0);
+    }
+    int caculate(vector<int> & price, int level)
+    {
+        if(level >= price.size())
+            return 0;
+        
+        int max_total_profit = 0;
+        for(int i = level; i < price.size(); ++i)
+        {
+            int max_profit = 0;
+            for(int j = i + 1; j < price.size(); ++j)
+            {
+                if(price[j] > price[i])
+                {
+                    int profit = caculate(price, j + 1) + price[j] - price[i];
+                    max_profit = max(profit, max_profit);
+                }
+            }
+            max_total_profit = max(max_total_profit, max_profit);
+        }
+        return max_total_profit;
+    }
+};
